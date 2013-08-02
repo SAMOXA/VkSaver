@@ -12,7 +12,10 @@ QML_IMPORT_PATH =
 # MOBILITY +=
 
 # The .cpp file which was generated for your project. Feel free to hack it.
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    vkagent.cpp \
+    vkgroup.cpp \
+    json.cpp
 
 # Installation path
 # target.path =
@@ -21,7 +24,21 @@ SOURCES += main.cpp
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
+QMAKE_CXXFLAGS += -std=c++11
+
+QT +=   webkit \
+        network \
+        xml
+
 OTHER_FILES += \
     qml/VkSaver/URLQuery.js \
     qml/VkSaver/XHR.js \
     qml/VkSaver/LoginWindow.qml
+
+HEADERS += \
+    vkagent.h \
+    vkgroup.h \
+    json.h
+
+RESOURCES += \
+    res.qrc
