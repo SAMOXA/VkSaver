@@ -16,9 +16,5 @@ int main(int argc, char *argv[])
     viewer.setMainQmlFile(QStringLiteral("qml/VkSaver/main.qml"));
 
     viewer.showExpanded();
-
-    QtQuick2ApplicationViewer viewer;
-    viewer.setMainQmlFile(QStringLiteral("qml/VkSaver/main.qml"));
-    viewer.showExpanded();
     return app.exec();
 }
