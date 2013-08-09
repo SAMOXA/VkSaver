@@ -50,6 +50,16 @@ Rectangle {
                     fillMode: Image.PreserveAspectFit
                     source: photo
                 }
+                Column{
+                    Text {
+                        width: parent.width - image.width - parent.spacing
+                        anchors.verticalCenter: parent.verticalCenter
+                        elide: Text.ElideRight
+                        renderType: Text.NativeRendering
+                        text: "%1".arg(name)
+                    }
+                }
+
                 Text {
                     width: parent.width - image.width - parent.spacing
                     anchors.verticalCenter: parent.verticalCenter

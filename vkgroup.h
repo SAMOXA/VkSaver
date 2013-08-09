@@ -3,21 +3,25 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QImage>
 
 class VkGroup// : public QObject
 {
     //Q_OBJECT
 public:
-    VkGroup(QString name, QString photo);
+    VkGroup(int gid, QString name, QString photoUrl, bool closed = false);
     void setName(const QString &_name);
     QString Name() const;
     void setPhoto(const QString &_photo);
-    QString Photo() const;
+    QString PhotoUrl() const;
 private:
     QString m_name;
-    QString m_photo;
+    QString m_photoUrl;
+    QImage m_photo;
     int m_gid;
     bool m_closed;
+    bool m_new;
+    int m_changeCount;
 signals:
 
 public slots:

@@ -15,7 +15,8 @@ QML_IMPORT_PATH =
 SOURCES += main.cpp \
     vkagent.cpp \
     vkgroup.cpp \
-    json.cpp
+    json.cpp \
+    dbmanager.cpp
 
 # Installation path
 # target.path =
@@ -28,7 +29,8 @@ QMAKE_CXXFLAGS += -std=c++11
 
 QT +=   webkit \
         network \
-        xml
+        xml \
+        sql
 
 OTHER_FILES += \
     qml/VkSaver/URLQuery.js \
@@ -38,7 +40,8 @@ OTHER_FILES += \
 HEADERS += \
     vkagent.h \
     vkgroup.h \
-    json.h
+    json.h \
+    dbmanager.h
 
 RESOURCES += \
     res.qrc

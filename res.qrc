@@ -2,4 +2,5 @@
     <qresource prefix="/qml/image">
         <file>loading.gif</file>
     </qresource>
+    <qresource prefix="/db"/>
 </RCC>

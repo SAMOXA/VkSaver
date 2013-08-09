@@ -1,14 +1,16 @@
 #include "vkgroup.h"
 
-VkGroup::VkGroup(QString _name, QString _photo)
-{
-    m_name = _name;
-    m_photo = _photo;
-}
-
 QString VkGroup::Name() const
 {
     return m_name;
+}
+
+VkGroup::VkGroup(int gid, QString name, QString photoUrl, bool closed)
+{
+    m_gid = gid;
+    m_name = name;
+    m_photoUrl = photoUrl;
+    m_closed = closed;
 }
 
 void VkGroup::setName(const QString &_name)
@@ -18,15 +20,15 @@ void VkGroup::setName(const QString &_name)
     }
 }
 
-QString VkGroup::Photo() const
+QString VkGroup::PhotoUrl() const
 {
-    return m_photo;
+    return m_photoUrl;
 }
 
 void VkGroup::setPhoto(const QString &_photo)
 {
-    if(m_photo != _photo){
-        m_photo = _photo;
+    if(m_photoUrl != _photo){
+        m_photoUrl = _photo;
     }
 
 }
@@ -41,8 +43,6 @@ void VkGroupModel::addGroup(const VkGroup& group)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_groups.push_back(group);
     endInsertRows();
-    //emit countChanged(m_groups.count());
-    //emit countChanged();
 }
 
 int VkGroupModel::rowCount(const QModelIndex &parent) const
@@ -60,7 +60,7 @@ QVariant VkGroupModel::data(const QModelIndex &index, int role) const
     if (role == NameRole)
         return group.Name();
     else if (role == PhotoRole)
-        return group.Photo();
+        return group.PhotoUrl();
     return QVariant();
 }
 

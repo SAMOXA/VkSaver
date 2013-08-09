@@ -8,12 +8,13 @@
 #include <QNetworkReply>
 #include "json.h"
 #include "vkgroup.h"
+#include "dbmanager.h"
 
 class VkAgent : public QObject
 {
     Q_OBJECT
 public:
-    explicit VkAgent(QObject *parent = 0);
+    VkAgent(QObject *parent = 0);
     Q_INVOKABLE
     void getGroups();
     Q_INVOKABLE
@@ -24,6 +25,7 @@ private:
     QString m_token;
     //Модель необходимо задавать извне ибо при экспорте объекта в QML создаётся новая копия объекта и изменения модели применяются к ней
     static VkGroupModel* m_groups;
+    static dbManager* m_dbManager;
 signals:
 
 public slots:

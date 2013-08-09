@@ -36,7 +36,7 @@ Window {
         anchors.fill: parent
 
         onLoadingChanged: {
-            console.log(loadRequest.url.toString())
+            //console.log(loadRequest.url.toString())
 
             if (loadRequest.status === WebView.LoadFailedStatus) {
                 loginWindow.failed("Loading error:", loadRequest.errorDomain, loadRequest.errorCode, loadRequest.errorString)
