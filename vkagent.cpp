@@ -3,6 +3,7 @@
 
 VkGroupModel* VkAgent::m_groups = 0;
 dbManager* VkAgent::m_dbManager = 0;
+QMap <int, VkWallModel*> VkAgent::m_posts;
 
 VkAgent::VkAgent(QObject *parent) :
     QObject(parent)
@@ -37,13 +38,14 @@ void VkAgent::replyFinished(QNetworkReply *reply)
         auto name = group.toMap()["name"].toString();
         auto photoUrl = group.toMap()["photo_medium"].toString();
         auto closed = group.toMap()["is_closed"].toBool();
-        qDebug() << group.toMap();
+        //qDebug() << group.toMap();
         m_groups->addGroup(VkGroup(gid, name, photoUrl, closed));
         if(!groupsFromDb->contains(gid)){
             m_dbManager->addGroup(gid, name, photoUrl);
         }
+        VkWallModel* tempModel = new VkWallModel(this);
+        m_posts.insert(gid, tempModel);
     }
-
 }
 
 void VkAgent::getGroups()
@@ -58,4 +60,8 @@ void VkAgent::getGroups()
 void VkAgent::setToken(QString token)
 {
     m_token = token;
+}
+
+void VkAgent::getUpdates()
+{
 }

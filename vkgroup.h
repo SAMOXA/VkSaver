@@ -5,9 +5,8 @@
 #include <QAbstractListModel>
 #include <QImage>
 
-class VkGroup// : public QObject
+class VkGroup
 {
-    //Q_OBJECT
 public:
     VkGroup(int gid, QString name, QString photoUrl, bool closed = false);
     void setName(const QString &_name);
@@ -31,7 +30,6 @@ public slots:
 class VkGroupModel : public QAbstractListModel
 {
     Q_OBJECT
-    //Q_PROPERTY(int count READ count NOTIFY countChanged)
 public:
     enum VkGroupRoles {
         NameRole = Qt::UserRole + 1,
@@ -41,13 +39,11 @@ public:
     void addGroup(const VkGroup& group);
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-    //int count();
 protected:
     QHash<int, QByteArray> roleNames() const;
 private:
     QList<VkGroup> m_groups;
 signals:
-    //void countChanged();
 };
 
 #endif // VKGROUP_H

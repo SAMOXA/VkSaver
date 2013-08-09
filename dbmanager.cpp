@@ -42,7 +42,7 @@ QMap<int, VkGroup *> *dbManager::getGroups()
 void dbManager::addGroup(int gid, QString& name, QString& photoUrl)
 {
     QSqlQuery q;
-    if(!q.exec(QString("INSERT INTO groups VALUES ('%1', '%2', '%3', NULL, '%4');").arg(gid).arg(name).arg(photoUrl).arg(QDateTime::currentMSecsSinceEpoch()))){
+    if(!q.exec(QString("INSERT INTO groups VALUES ('%1', '%2', '%3', NULL, '%4');").arg(gid).arg(name).arg(photoUrl).arg(0))){
         qDebug() << "Can`t add groups " << q.lastError().text() << " " << q.lastQuery();
     }
 }
