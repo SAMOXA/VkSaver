@@ -14,6 +14,7 @@
 #include "vkgroup.h"
 #include "vkwall.h"
 #include "dbmanager.h"
+#include "groupsupdateworker.h"
 
 class VkAgent : public QObject
 {
@@ -34,6 +35,7 @@ private:
     static VkGroupModel* m_groups;
     static dbManager* m_dbManager;
     static QMap <int, VkWallModel*> m_posts;
+    QThread workThread;
 signals:
 
 public slots:

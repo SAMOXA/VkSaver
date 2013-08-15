@@ -16,7 +16,9 @@ SOURCES += main.cpp \
     vkagent.cpp \
     vkgroup.cpp \
     json.cpp \
-    dbmanager.cpp
+    dbmanager.cpp \
+    groupsupdateworker.cpp \
+    vkwall.cpp
 
 # Installation path
 # target.path =
@@ -41,7 +43,9 @@ HEADERS += \
     vkagent.h \
     vkgroup.h \
     json.h \
-    dbmanager.h
+    dbmanager.h \
+    groupsupdateworker.h \
+    vkwall.h
 
 RESOURCES += \
     res.qrc

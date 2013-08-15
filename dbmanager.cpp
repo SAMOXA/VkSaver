@@ -12,11 +12,25 @@ dbManager::dbManager(QString path, QObject *parent) :
         qDebug() << "Not open";
     }
     QSqlQuery q;
-    if(!q.exec(QString("CREATE TABLE IF NOT EXISTS groups (gid INTEGER PRIMARY KEY NOT NULL, name TEXT, photoUrl TEXT, photo BLOB, lastUpdate INTEGER);"))){
+    if(!q.exec(QString("CREATE TABLE IF NOT EXISTS groups ("
+                       "gid INTEGER PRIMARY KEY NOT NULL,"
+                       "name TEXT,"
+                       "photoUrl TEXT,"
+                       "photo BLOB,"
+                       "lastRecordDate INTEGER"
+                       ");"))){
         qDebug() << "Can`t create groups";
     }
-    if(!q.exec(QString("CREATE TABLE IF NOT EXISTS records (rid INTEGER PRIMARY KEY NOT NULL, gid INTEGER NOT NULL, FOREIGN KEY(gid) REFERENCES groups(gid));"))){
-        qDebug() << "Can`t create records";
+    if(!q.exec(QString("CREATE TABLE IF NOT EXISTS posts ("
+                       "pid INTEGER NOT NULL,"
+                       "gid INTEGER NOT NULL,"
+                       "date INTEGER,"
+                       "text TEXT,"
+                       "aid INTEGER,"
+                       "PRIMARY KEY (pid, gid),"
+                       "FOREIGN KEY(gid) REFERENCES groups(gid)"
+                       ");"))){
+        qDebug() << "Can`t create posts";
     }
     if(!q.exec(QString("PRAGMA foreign_keys = ON;"))){
         qDebug() << "Can`t foreign_keys";

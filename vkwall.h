@@ -7,14 +7,15 @@
 class VkWall
 {
 public:
-    VkWall(int wid, QString& text, qint64 timeStamp);
+    VkWall(int wid, QString text, uint timeStamp);
     int Wid() const;
-    qint64 TimeStamp() const;
+    uint TimeStamp() const;
     QString Text() const;
 private:
     int m_wid;
-    qint64 m_timeStamp;
+    uint m_timeStamp;
     QString m_text;
+    //Attachments
 };
 
 class VkWallModel : public QAbstractListModel

@@ -1,6 +1,6 @@
 #include "vkwall.h"
 
-VkWall::VkWall(int wid, QString &text, qint64 timeStamp)
+VkWall::VkWall(int wid, QString text, uint timeStamp)
 {
     m_wid = wid;
     m_text = text;
@@ -12,7 +12,7 @@ int VkWall::Wid() const
     return m_wid;
 }
 
-qint64 VkWall::TimeStamp() const
+uint VkWall::TimeStamp() const
 {
     return m_timeStamp;
 }
