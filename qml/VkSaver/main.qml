@@ -19,7 +19,7 @@ Rectangle {
         id: loginWindow
         title: "Login Window"
         applicationId: "3754205"
-        permissions: 'status'
+        permissions: 'friends,photos,audio,video,docs,notes,pages,status,wall,groups,messages'
         onSucceeded: {
             processLoginSuccess(token)
             main.state = "groupList"
@@ -44,6 +44,8 @@ Rectangle {
     }
 
     function processLoginSuccess(token) {
+        console.log("Crash")
+        loginWindow.destroy()
         gate.setToken(token)
         gate.getGroups()
         main.state = "groupList"

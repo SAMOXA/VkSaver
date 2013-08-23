@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     json.cpp \
     dbmanager.cpp \
     groupsupdateworker.cpp \
-    vkwall.cpp
+    vkwall.cpp \
+    attachments/photo.cpp
 
 # Installation path
 # target.path =
@@ -45,7 +46,8 @@ HEADERS += \
     json.h \
     dbmanager.h \
     groupsupdateworker.h \
-    vkwall.h
+    vkwall.h \
+    attachments/photo.h
 
 RESOURCES += \
     res.qrc

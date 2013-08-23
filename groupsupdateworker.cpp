@@ -14,6 +14,8 @@ void GroupsUpdateWorker::proceed()
     QNetworkAccessManager *manager1 = new QNetworkAccessManager(this);
     connect(manager1, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)), Qt::QueuedConnection);
+
+
     manager1->get(QNetworkRequest(QUrl(QString("https://api.vk.com/method/wall.get?"
                                               "owner_id=%1&"
                                               //"extended=1&"
@@ -61,19 +63,25 @@ void GroupsUpdateWorker::replyFinished(QNetworkReply *reply)
     Q_ASSERT(ok != false);
     JsonArray posts = result["response"].toList();
     uint timeStamp = 0;
-    int temp;
     foreach (QVariant post, posts) {
+
         if(post.toMap().isEmpty()){
             continue;
         }
         if(timeStamp == 0){
             timeStamp = post.toMap()["date"].toUInt();
         }
-        temp = post.toMap()["from_id"].toInt();
+        JsonArray attachments = post.toMap()["attachments"].toList();
+        foreach (QVariant attachment, attachments) {
+            qDebug() << attachment.toMap()["type"];
+            qDebug() << "";
+        }
+        qDebug() << "";
+
+//        if(attachments["type"] == "photo"){
+//            qDebug() << attachments;
+//
+//        }
         (*m_posts)[-post.toMap()["from_id"].toInt()]->addWall(VkWall(post.toMap()["id"].toInt(), post.toMap()["text"].toString(), post.toMap()["date"].toUInt()));
     }
-    if(timeStamp == 0){
-        qDebug() << temp;
-    }
-
 }
