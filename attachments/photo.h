@@ -7,12 +7,19 @@
 class VkPhoto
 {
 public:
-    VkPhoto(int pid, QString src, QString srcBig);
-    int Pid() const;
-    QString Src() const;
-    QString SrcBig() const;
+    VkPhoto(uint pid, QString src, QString srcBig);
+
+    uint pid() const;
+    void setPid(uint pid);
+
+    QString src() const;
+    void setSrc(const QString &src);
+
+    QString srcBig() const;
+    void setSrcBig(const QString &srcBig);
+
 private:
-    int m_pid;
+    uint m_pid;
     QString m_src;
     QString m_srcBig;
 };

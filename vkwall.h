@@ -3,19 +3,26 @@
 
 #include <QDateTime>
 #include <QAbstractListModel>
+#include "attachments/photo.h"
 
 class VkWall
 {
 public:
     VkWall(int wid, QString text, uint timeStamp);
-    int Wid() const;
-    uint TimeStamp() const;
-    QString Text() const;
+    ~VkWall();
+    int wid() const;
+    uint timeStamp() const;
+    QString text() const;
+    VkPhotoModel* photos() const;
+    void setWid(int wid);
+    void setTimeStamp(uint timeStamp);
+    void setText(QString& text);
+    void addPhoto(VkPhoto& photo);
 private:
     int m_wid;
     uint m_timeStamp;
     QString m_text;
-    //Attachments
+    VkPhotoModel* m_photos;
 };
 
 class VkWallModel : public QAbstractListModel

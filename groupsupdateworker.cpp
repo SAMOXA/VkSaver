@@ -62,26 +62,38 @@ void GroupsUpdateWorker::replyFinished(QNetworkReply *reply)
     JsonObject result = QtJson::parse(reply->readAll(), ok).toMap();
     Q_ASSERT(ok != false);
     JsonArray posts = result["response"].toList();
-    uint timeStamp = 0;
+    uint lastTimeStamp = 0;
     foreach (QVariant post, posts) {
-
         if(post.toMap().isEmpty()){
             continue;
         }
-        if(timeStamp == 0){
-            timeStamp = post.toMap()["date"].toUInt();
+        auto wid = post.toMap()["id"].toInt();
+        auto text = post.toMap()["text"].toString();
+        auto timeStamp = post.toMap()["date"].toUInt();
+        auto gid = post.toMap()["from_id"].toInt();
+        if(lastTimeStamp == 0){
+            lastTimeStamp = timeStamp;
         }
+        auto wall = new VkWall(wid, text, timeStamp);
         JsonArray attachments = post.toMap()["attachments"].toList();
         foreach (QVariant attachment, attachments) {
-            qDebug() << attachment.toMap()["type"];
-            qDebug() << "";
+            if(attachment.toMap()["type"] == "photo"){
+                auto attachmentMap = attachment.toMap()["photo"].toMap();
+                auto src = attachmentMap["src"].toString();
+                auto pid = attachmentMap["pid"].toUInt();
+                QString srcBig;
+                if(attachmentMap.contains("src_xxxbig")){
+                    srcBig = attachmentMap["src_xxxbig"].toString();
+                }else if(attachmentMap.contains("src_xxbig")){
+                    srcBig = attachmentMap["src_xxbig"].toString();
+                }else if(attachmentMap.contains("src_xbig")){
+                    srcBig = attachmentMap["src_xbig"].toString();
+                }else {
+                    srcBig = attachmentMap["src_big"].toString();
+                }
+                wall->addPhoto(*(new VkPhoto(pid, src, srcBig)));
+            }
         }
-        qDebug() << "";
-
-//        if(attachments["type"] == "photo"){
-//            qDebug() << attachments;
-//
-//        }
-        (*m_posts)[-post.toMap()["from_id"].toInt()]->addWall(VkWall(post.toMap()["id"].toInt(), post.toMap()["text"].toString(), post.toMap()["date"].toUInt()));
+        (*m_posts)[-gid]->addWall(*wall);
     }
 }

@@ -5,23 +5,58 @@ VkWall::VkWall(int wid, QString text, uint timeStamp)
     m_wid = wid;
     m_text = text;
     m_timeStamp = timeStamp;
+    m_photos = 0;
+    m_containPhoto = false;
 }
 
-int VkWall::Wid() const
+VkWall::~VkWall()
+{
+    delete m_photos;
+}
+
+int VkWall::wid() const
 {
     return m_wid;
 }
 
-uint VkWall::TimeStamp() const
+uint VkWall::timeStamp() const
 {
     return m_timeStamp;
 }
 
-QString VkWall::Text() const
+QString VkWall::text() const
 {
     return m_text;
 }
 
+VkPhotoModel* VkWall::photos() const
+{
+    return m_photos;
+}
+
+void VkWall::setWid(int wid)
+{
+    m_wid = wid;
+}
+
+void VkWall::setTimeStamp(uint timeStamp)
+{
+    m_timeStamp = timeStamp;
+}
+
+void VkWall::setText(QString &text)
+{
+    m_text = text;
+}
+
+void VkWall::addPhoto(VkPhoto &photo)
+{
+    if(m_photos == 0){
+        m_photos = new VkPhotoModel();
+        m_containPhoto = true;
+    }
+    m_photos->addPhoto(photo);
+}
 
 VkWallModel::VkWallModel(QObject *parent)
 {
@@ -51,13 +86,13 @@ QVariant VkWallModel::data(const QModelIndex &index, int role) const
     const VkWall &post = m_posts[index.row()];
     switch (role) {
     case TextRole:
-        return post.Text();
+        return post.text();
         break;
     case TimeStampRole:
-        return post.TimeStamp();
+        return post.timeStamp();
         break;
     case WidRole:
-        return post.Wid();
+        return post.wid();
         break;
     default:
         return QVariant();

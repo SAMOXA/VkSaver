@@ -1,27 +1,40 @@
 #include "photo.h"
+uint VkPhoto::pid() const
+{
+    return m_pid;
+}
 
-VkPhoto::VkPhoto(int pid, QString src, QString srcBig)
+void VkPhoto::setPid(uint pid)
+{
+    m_pid = pid;
+}
+
+QString VkPhoto::srcBig() const
+{
+    return m_srcBig;
+}
+
+void VkPhoto::setSrcBig(const QString &srcBig)
+{
+    m_srcBig = srcBig;
+}
+
+QString VkPhoto::src() const
+{
+    return m_src;
+}
+
+void VkPhoto::setSrc(const QString &src)
+{
+    m_src = src;
+}
+
+VkPhoto::VkPhoto(uint pid, QString src, QString srcBig)
 {
     m_pid = pid;
     m_src = src;
     m_srcBig = srcBig;
 }
-
-int VkPhoto::Pid() const
-{
-    return m_pid;
-}
-
-QString VkPhoto::Src() const
-{
-    return m_src;
-}
-
-QString VkPhoto::SrcBig() const
-{
-    return m_srcBig;
-}
-
 
 VkPhotoModel::VkPhotoModel(QObject *parent)
 {
@@ -37,7 +50,8 @@ void VkPhotoModel::addPhoto(const VkPhoto &photo)
 
 int VkPhotoModel::rowCount(const QModelIndex &parent) const
 {
-   return m_photos.count();
+    Q_UNUSED(parent)
+    return m_photos.count();
 }
 
 QVariant VkPhotoModel::data(const QModelIndex &index, int role) const
@@ -48,13 +62,13 @@ QVariant VkPhotoModel::data(const QModelIndex &index, int role) const
     const VkPhoto &photo = m_photos[index.row()];
     switch (role) {
     case PidRole:
-        return photo.Pid();
+        return photo.pid();
         break;
     case PreViewRole:
-        return photo.Src();
+        return photo.src();
         break;
     case SrcRole:
-        return photo.SrcBig();
+        return photo.srcBig();
         break;
     default:
         return QVariant();
