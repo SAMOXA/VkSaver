@@ -1,6 +1,6 @@
 #include "vkgroup.h"
 
-QString VkGroup::Name() const
+QString VkGroup::name() const
 {
     return m_name;
 }
@@ -20,7 +20,7 @@ void VkGroup::setName(const QString &_name)
     }
 }
 
-QString VkGroup::PhotoUrl() const
+QString VkGroup::photoUrl() const
 {
     return m_photoUrl;
 }
@@ -30,7 +30,16 @@ void VkGroup::setPhoto(const QString &_photo)
     if(m_photoUrl != _photo){
         m_photoUrl = _photo;
     }
+}
 
+int VkGroup::gid() const
+{
+    return m_gid;
+}
+
+void VkGroup::setGid(int gid)
+{
+    m_gid = gid;
 }
 
 VkGroupModel::VkGroupModel(QObject *parent)
@@ -57,10 +66,17 @@ QVariant VkGroupModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     const VkGroup &group = m_groups[index.row()];
-    if (role == NameRole)
-        return group.Name();
-    else if (role == PhotoRole)
-        return group.PhotoUrl();
+    switch(role){
+    case NameRole:
+        return group.name();
+        break;
+    case PhotoRole:
+        return group.photoUrl();
+        break;
+    case GidRole:
+        return group.gid();
+        break;
+    }
     return QVariant();
 }
 
@@ -69,5 +85,6 @@ QHash<int, QByteArray> VkGroupModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[NameRole] = "name";
     roles[PhotoRole] = "photo";
+    roles[GidRole] = "gid";
     return roles;
 }

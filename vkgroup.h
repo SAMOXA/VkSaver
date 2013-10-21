@@ -10,9 +10,11 @@ class VkGroup
 public:
     VkGroup(int gid, QString name, QString photoUrl, bool closed = false);
     void setName(const QString &_name);
-    QString Name() const;
+    QString name() const;
     void setPhoto(const QString &_photo);
-    QString PhotoUrl() const;
+    QString photoUrl() const;
+    int gid() const;
+    void setGid(int gid);
 private:
     QString m_name;
     QString m_photoUrl;
@@ -33,7 +35,8 @@ class VkGroupModel : public QAbstractListModel
 public:
     enum VkGroupRoles {
         NameRole = Qt::UserRole + 1,
-        PhotoRole
+        PhotoRole,
+        GidRole
     };
     VkGroupModel(QObject *parent = 0);
     void addGroup(const VkGroup& group);

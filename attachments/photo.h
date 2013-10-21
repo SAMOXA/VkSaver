@@ -28,7 +28,7 @@ class VkPhotoModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum VkPhotoRopes {
+    enum VkPhotoRoles {
         PidRole = Qt::UserRole + 1,
         PreViewRole,
         SrcRole

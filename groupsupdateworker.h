@@ -15,12 +15,14 @@ class GroupsUpdateWorker : public QObject
 {
     Q_OBJECT
 public:
-    GroupsUpdateWorker(QMap <int, VkWallModel*>* posts, QString token, QObject *parent = 0);
+    GroupsUpdateWorker(QVariantMap *storage, QString token, QObject *parent = 0)
+        :m_storage(storage), m_token(token)
+    { m_pos = m_storage->begin(); }
     void start();
 private:
-    QMap <int, VkWallModel*>* m_posts;
+    QVariantMap *m_storage;
     QString m_token;
-    QMap <int, VkWallModel*>::iterator m_pos;
+    QVariantMap::iterator m_pos;
 signals:
     void finished();
 public slots:

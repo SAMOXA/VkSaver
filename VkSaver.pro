@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     dbmanager.cpp \
     groupsupdateworker.cpp \
     vkwall.cpp \
-    attachments/photo.cpp
+    attachments/photo.cpp \
+    pagemanager.cpp
 
 # Installation path
 # target.path =
@@ -47,7 +48,8 @@ HEADERS += \
     dbmanager.h \
     groupsupdateworker.h \
     vkwall.h \
-    attachments/photo.h
+    attachments/photo.h \
+    pagemanager.h
 
 RESOURCES += \
     res.qrc

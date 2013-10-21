@@ -23,8 +23,7 @@ Window {
         if (permissions) {
             params['scope'] = permissions
         }
-
-        webView.url = "https://oauth.vk.com/authorize?%1".arg(URLQuery.serializeParams(params))
+        webView.url = "https://oauth.vk.com/authorize?v=%1&%2".arg("5.2").arg(URLQuery.serializeParams(params))
     }
 
     width: 1024

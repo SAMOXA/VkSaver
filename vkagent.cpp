@@ -1,54 +1,48 @@
 #include "vkagent.h"
 #include <QDebug>
 
-VkGroupModel* VkAgent::m_groups = 0;
+QVariantMap VkAgent::storage;
 dbManager* VkAgent::m_dbManager = 0;
-QMap <int, VkWallModel*> VkAgent::m_posts;
+PageManager VkAgent::m_pageManager;
 
 VkAgent::VkAgent(QObject *parent) :
     QObject(parent)
 {
-    if(m_groups == 0){
-        m_groups = new VkGroupModel();
-    }
     if(m_dbManager == 0){
         m_dbManager = new dbManager(QString("dbase.sqlite"));
     }
-}
-
-VkGroupModel *VkAgent::groups()
-{
-    return m_groups;
+    m_currentGroupId = -1;
 }
 
 void VkAgent::replyFinished(QNetworkReply *reply)
 {
+
     using QtJson::JsonObject;
     using QtJson::JsonArray;
     bool ok;
     JsonObject result = QtJson::parse(reply->readAll(), ok).toMap();
     Q_ASSERT(ok != false);
     JsonArray groups = result["response"].toList();
-    auto groupsFromDb = m_dbManager->getGroups();
+    //auto groupsFromDb = m_dbManager->getGroups();
+    int i = 0;
     foreach (QVariant group, groups) {
         //Пропуск элемента колличества
         if(group.toMap().isEmpty()){
             continue;
         }
-        auto gid = group.toMap()["gid"].toInt();
-        auto name = group.toMap()["name"].toString();
-        auto photoUrl = group.toMap()["photo_medium"].toString();
-        auto closed = group.toMap()["is_closed"].toBool();
-        m_groups->addGroup(VkGroup(gid, name, photoUrl, closed));
-        if(!groupsFromDb->contains(gid)){
-            m_dbManager->addGroup(gid, name, photoUrl);
-        }
-        VkWallModel* tempModel = new VkWallModel(this);
-        m_posts.insert(gid, tempModel);
+        QString gid = group.toMap()["gid"].toString();
+        group.toMap()["positionFromVk"] = i;
+        storage[gid] = group.toMap();
+        storage[gid].toMap()["gid"] = gid.toInt();
+        i++;
+//        if(!groupsFromDb->contains(gid.toInt())){
+//            m_dbManager->addGroup(gid, name, photoUrl);
+//        }
         qApp->processEvents();
     }
+    emit groupsListChanged();
     QThread* thread = new QThread;
-    GroupsUpdateWorker* worker = new GroupsUpdateWorker(&m_posts, m_token);
+    GroupsUpdateWorker* worker = new GroupsUpdateWorker(&storage, m_token);
     worker->moveToThread(thread);
     //Таймер делается здесь ибо в другом потоке нет очереди событий
     QTimer* timer = new QTimer(0);
@@ -64,13 +58,12 @@ void VkAgent::replyFinished(QNetworkReply *reply)
     thread->start();
 }
 
-void VkAgent::getGroups()
+void VkAgent::updateFromVk()
 {
     QNetworkAccessManager *manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(replyFinished(QNetworkReply*)));
-
-    manager->get(QNetworkRequest(QUrl(QString("https://api.vk.com/method/groups.get?fields=photo_medium&extended=1&filter=publics&access_token=%1").arg(m_token))));
+    manager->get(QNetworkRequest(QUrl(QString("https://api.vk.com/method/groups.get?count=54&fields=photo_medium&extended=1&filter=publics&access_token=%1").arg(m_token))));
 }
 
 void VkAgent::setToken(QString token)
@@ -80,4 +73,46 @@ void VkAgent::setToken(QString token)
 
 void VkAgent::getUpdates()
 {
+}
+
+void VkAgent::pushPage(QString pageName)
+{
+    m_pageManager.pushPage(pageName);
+    emit pageChangedSignal(pageName);
+}
+
+QString VkAgent::popPage()
+{
+    QString temp = m_pageManager.popPage();
+    emit pageChangedSignal(temp);
+    return temp;
+}
+
+void VkAgent::resetPageStack(QString newRootPageName)
+{
+    m_pageManager.resetStack(newRootPageName);
+    emit pageChangedSignal(newRootPageName);
+}
+
+void VkAgent::swithToGroup(int gid)
+{
+    qDebug() << gid;
+    m_currentGroupId = gid;
+    qDebug() << QString::number(gid);
+}
+
+QVariantList VkAgent::getGroupsList()
+{
+    qDebug() << "Start";
+    QVariantList rval;
+    foreach (QVariant i, storage) {
+        rval.insert(i.toMap()["positionFromVk"].toInt(), i);
+    }
+    qDebug() << "Stop";
+    return rval;
+}
+
+QVariantList VkAgent::getGroupPosts()
+{
+
 }

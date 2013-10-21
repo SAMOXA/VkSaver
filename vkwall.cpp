@@ -1,6 +1,7 @@
 #include "vkwall.h"
+#include <QDebug>
 
-VkWall::VkWall(int wid, QString text, uint timeStamp)
+VkPost::VkPost(int wid, QString text, uint timeStamp)
 {
     m_wid = wid;
     m_text = text;
@@ -9,47 +10,47 @@ VkWall::VkWall(int wid, QString text, uint timeStamp)
     m_containPhoto = false;
 }
 
-VkWall::~VkWall()
+VkPost::~VkPost()
 {
     delete m_photos;
 }
 
-int VkWall::wid() const
+int VkPost::wid() const
 {
     return m_wid;
 }
 
-uint VkWall::timeStamp() const
+uint VkPost::timeStamp() const
 {
     return m_timeStamp;
 }
 
-QString VkWall::text() const
+QString VkPost::text() const
 {
     return m_text;
 }
 
-VkPhotoModel* VkWall::photos() const
+VkPhotoModel* VkPost::photos() const
 {
     return m_photos;
 }
 
-void VkWall::setWid(int wid)
+void VkPost::setWid(int wid)
 {
     m_wid = wid;
 }
 
-void VkWall::setTimeStamp(uint timeStamp)
+void VkPost::setTimeStamp(uint timeStamp)
 {
     m_timeStamp = timeStamp;
 }
 
-void VkWall::setText(QString &text)
+void VkPost::setText(QString &text)
 {
     m_text = text;
 }
 
-void VkWall::addPhoto(VkPhoto &photo)
+void VkPost::addPhoto(VkPhoto &photo)
 {
     if(m_photos == 0){
         m_photos = new VkPhotoModel();
@@ -58,12 +59,18 @@ void VkWall::addPhoto(VkPhoto &photo)
     m_photos->addPhoto(photo);
 }
 
-VkWallModel::VkWallModel(QObject *parent)
+bool VkPost::containPhoto() const
 {
-    Q_UNUSED(parent)
+    return m_containPhoto;
 }
 
-void VkWallModel::addWall(const VkWall &wall)
+//VkWallModel::VkWallModel(VkPost* initData, QObject *parent)
+//{
+//    m_posts = initData;
+//    Q_UNUSED(parent)
+//}
+
+void VkWallModel::addWall(const VkPost &wall)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_posts.push_back(wall);
@@ -80,10 +87,14 @@ int VkWallModel::rowCount(const QModelIndex &parent) const
 
 QVariant VkWallModel::data(const QModelIndex &index, int role) const
 {
+    qDebug() << "Data";
     if (index.row() < 0 || index.row() >= m_posts.count())
         return QVariant();
 
-    const VkWall &post = m_posts[index.row()];
+    const VkPost &post = m_posts[index.row()];
+    //TODO рефактировать в if return формат
+    auto photosModel = post.photos();
+    QVariantList photos;
     switch (role) {
     case TextRole:
         return post.text();
@@ -94,17 +105,32 @@ QVariant VkWallModel::data(const QModelIndex &index, int role) const
     case WidRole:
         return post.wid();
         break;
+    case PhotosRole:
+        for(int i=0; i<photosModel->rowCount(); i++){
+            photos.append(photosModel->data(photosModel->index(1), VkPhotoModel::PidRole));
+        }
+        return photos;
+        break;
+    case ContainPhotoRole:
+        return post.containPhoto();
+        break;
     default:
         return QVariant();
         break;
     }
 }
 
+//void VkWallModel::setNewModel(VkPost *newData)
+//{
+//}
+
 QHash<int, QByteArray> VkWallModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles[TextRole] = "name";
+    roles[TextRole] = "text";
     roles[TimeStampRole] = "date";
     roles[WidRole] = "wid";
+    roles[PhotosRole] = "photos";
+    roles[ContainPhotoRole] = "containPhoto";
     return roles;
 }

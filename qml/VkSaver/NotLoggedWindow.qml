@@ -1,7 +1,7 @@
 import QtQuick 2.0
 
 Rectangle {
-    signal login()
+    id: notLogged
     Text {
         anchors.centerIn: parent
         color: "blue"
@@ -12,9 +12,35 @@ Rectangle {
         MouseArea{
             anchors.fill: parent
             onClicked:{
-                login()
+                loginWindow.visible = true
+                loginWindow.login()
+                gate.pushPage("Loading")
+                visible = false;
             }
         }
+    }
+
+    LoginWindow {
+        id: loginWindow
+        title: "Login Window"
+        applicationId: "3754205"
+        permissions: 'friends,photos,audio,video,docs,notes,pages,status,wall,groups,messages'
+        onSucceeded: {
+            processLoginSuccess(token)
+            visible = false;
+        }
+    }
+
+    Connections {
+        target:gate
+        onGroupsListChanged: {
+            gate.resetPageStack("GroupList")
+        }
+    }
+
+    function processLoginSuccess(token) {
+        gate.setToken(token)
+        gate.updateFromVk()
     }
 
 }
